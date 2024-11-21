@@ -159,6 +159,9 @@ app.post("/upload", upload.single("file"), async (req, res) => {
 
 // Start the server
 const PORT = process.env.PORT || 5001;
+
+app.get('/', (req, res) => res.send('Express on vercel'));
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
