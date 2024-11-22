@@ -1,3 +1,0 @@
-{ "version": 2, "rewrites": [{ "source": "/(.*)", "destination": "/" }], "env": {
-    "API_KEY": "AIzaSyBkgz2-vyLj1T4e1ZbZSAcmOGgG5r4Hf_Q"
-  } }

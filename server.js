@@ -6,6 +6,7 @@ const cors = require("cors"); // Enable cross-origin requests
 require("dotenv").config();
 const xlsx = require("xlsx"); // Add this to handle XLSX files
 const fs = require("fs"); // To delete temporary files after processing
+const { error } = require("console");
 
 const app = express();
 const upload = multer({ dest: "uploads/" }); // File upload destination
@@ -43,7 +44,7 @@ const convertXlsxToPlainText = (filePath) => {
 
     // Convert JSON data into plain text
     const plainText = jsonData
-      .map((row) => row.join("\t")) // Join cells of each row with tabs
+      .map((row) => row.join(",")) // Join cells of each row with tabs
       .join("\n"); // Join rows with newlines
 
     return plainText;
@@ -60,8 +61,6 @@ app.post("/upload", upload.single("file"), async (req, res) => {
       return res.status(400).send("No file uploaded.");
     }
 
-    
-
     let mimeType = file.mimetype;
     let plainTextData = null;
     let tempFilePath = file.path;
@@ -74,7 +73,7 @@ app.post("/upload", upload.single("file"), async (req, res) => {
     ) {
       console.log("Processing Excel file...");
       plainTextData = convertXlsxToPlainText(file.path);
-      mimeType = "text/plain"; 
+      mimeType = "text/plain";
 
       tempFilePath = "uploads/temporary.txt";
       fs.writeFileSync(tempFilePath, plainTextData);
@@ -91,8 +90,8 @@ app.post("/upload", upload.single("file"), async (req, res) => {
 
     // Upload file to Google AI FileManager
     let uploadResponse;
-      // Direct upload for other supported formats
-      uploadResponse = await fileManager.uploadFile(tempFilePath, fileManagerObj);
+    // Direct upload for other supported formats
+    uploadResponse = await fileManager.uploadFile(tempFilePath, fileManagerObj);
 
     if (!uploadResponse || !uploadResponse.file || !uploadResponse.file.uri) {
       throw new Error("Failed to upload file to Google AI FileManager.");
@@ -111,9 +110,9 @@ app.post("/upload", upload.single("file"), async (req, res) => {
       },
     });
 
-      // For PDF and image files: Direct AI processing request
-      generateContentRequest.push({
-        text: `Please summarize this document as a JSON object with the following fields and send it as an array:
+    // For files: Direct AI processing request
+    generateContentRequest.push({
+      text: `Please summarize this document as a JSON object with the following fields and send it as an array:
         {
           "SerialNumber": "string",
           "CustomerName": "string",
@@ -128,8 +127,8 @@ app.post("/upload", upload.single("file"), async (req, res) => {
           "Email": "string",
           "CompanyName": "string"
         }`,
-      });
-   
+    });
+
     // Process file using the AI model
     const result = await model.generateContent(generateContentRequest);
 
@@ -139,7 +138,7 @@ app.post("/upload", upload.single("file"), async (req, res) => {
     // Extract JSON part from response
     const jsonMatch = responseText.match(/```json\n([\s\S]*?)```/);
     if (!jsonMatch || !jsonMatch[1]) {
-      alert("JSON not found in the AI response.");
+      throw new Error("JSON not found in the AI response.");
     }
 
     const jsonString = jsonMatch[1]; // Extracted JSON string
@@ -160,9 +159,8 @@ app.post("/upload", upload.single("file"), async (req, res) => {
 // Start the server
 const PORT = process.env.PORT || 5001;
 
-app.get('/', (req, res) => res.send('Express on vercel'));
+app.get("/", (req, res) => res.send("Express on vercel"));
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
-
