@@ -1,27 +1,34 @@
 
-AI File Extraction Feature
+# AI File Extraction Feature
+
 This project provides an AI-powered file extraction system that allows users to upload Excel files, process them using Google Generative AI, and receive summarized data in JSON format. The server processes the uploaded files, extracts their content, and summarizes the information based on predefined fields like customer name, serial number, product, and more.
 
-Features
-Upload an Excel file (XLSX or XLS format).
-Extract text data from Excel sheets.
-Process the file with Google Generative AI to summarize the document.
-Return a JSON object containing the summarized information.
-Clean up the uploaded file after processing.
-Technologies Used
-Node.js: JavaScript runtime environment.
-Express: Web framework for building the server.
-Multer: Middleware for handling file uploads.
-Google Generative AI: API used for generating content based on uploaded files.
-xlsx: Library for parsing Excel files.
-fs: File system module to handle temporary file creation and deletion.
-cors: Middleware for enabling cross-origin requests.
-Setup Instructions
-Prerequisites
-Node.js: Ensure that Node.js is installed. You can download it from here.
-Google Cloud API Key: To use the Google Generative AI API, you need to set up a project in Google Cloud and obtain an API key.
-Install Dependencies
-Clone the repository and navigate to the project folder. Run the following commands to install dependencies:
+## Features
+
+- Upload an Excel file (XLSX or XLS format).
+- Extract text data from Excel sheets.
+- Process the file with Google Generative AI to summarize the document.
+- Return a JSON object containing the summarized information.
+- Clean up the uploaded file after processing.
+
+## Technologies Used
+
+- Node.js: JavaScript runtime environment.
+- Express: Web framework for building the server.
+- Multer: Middleware for handling file uploads.
+- Google Generative AI: API used for generating content based on uploaded files.
+- xlsx: Library for parsing Excel files.
+- fs: File system module to handle temporary file creation and deletion.
+- cors: Middleware for enabling cross-origin requests.
+
+## Setup Instructions
+
+### Prerequisites
+
+- Node.js: Ensure that Node.js is installed. You can download it from here.
+- Google Cloud API Key: To use the Google Generative AI API, you need to set up a project in Google Cloud and obtain an API key.
+- Install Dependencies
+- Clone the repository and navigate to the project folder. Run the following commands to install dependencies:
 
 ```bash
 git clone <repository-url>
@@ -35,7 +42,8 @@ Create a .env file in the root directory of the project and add the following va
 API_KEY=your-google-cloud-api-key
 ```
 
-Running the Application
+### Running the Application
+
 After setting up the environment variables and installing dependencies, you can run the server using the following command:
 
 ```bash
@@ -46,7 +54,8 @@ This will start the server on the specified port (5001 by default). The server w
 http://localhost:5001
 ```
 
-API Endpoints
+### API Endpoints
+
 POST /upload
 This endpoint allows you to upload an Excel file (XLSX or XLS format) to the server, which will process it and return the extracted data in JSON format.
 
@@ -110,7 +119,8 @@ Response:
 Express on vercel
 ```
 
-Handling Errors
+## Handling Errors
+
 In case of any errors during the file processing, the server will return a 500 status code with a message indicating what went wrong. For example:
 
 If no file is uploaded: No file uploaded.
@@ -118,6 +128,7 @@ If there is an issue with the AI response: JSON not found in the AI response.
 Temporary File Cleanup
 Once the file is processed, it will be deleted from the server's filesystem to ensure that temporary files do not accumulate.
 
-Notes
+## Notes
+
 The server uses the Google Generative AI model (gemini-1.5-flash) to generate content and process the file.
 Only Excel files (.xlsx or .xls) are supported at this time. Other file formats are not processed.
